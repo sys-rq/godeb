@@ -49,11 +49,11 @@ const control = `
 Package: golang
 Version: %s
 Architecture: %s
-Maintainer: Gustavo Niemeyer <niemeyer@canonical.com>
+Maintainer: Remigijus Vaitelis <remis@uber.com>
 Installed-Size: %d
 Conflicts: golang-stable, golang-tip, golang-weekly
 Section: devel
-Priority: extra
+Priority: standard
 Homepage: http://golang.org
 Description: Go language compiler and tools (gc)
  The Go programming language is an open source project to make programmers
@@ -86,7 +86,8 @@ func debVersion(version string) string {
 			break
 		}
 	}
-	return version + "-godeb1"
+	return version
+	//return version + "-godeb1"
 }
 
 var errNotInstalled = fmt.Errorf("package golang is not installed")
