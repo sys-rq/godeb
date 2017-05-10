@@ -13,7 +13,6 @@ import (
 	"bytes"
 	"fmt"
 	"go/build"
-	"gopkg.in/xmlpath.v1"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -21,6 +20,8 @@ import (
 	"path"
 	"sort"
 	"strings"
+
+	"gopkg.in/xmlpath.v1"
 )
 
 var usage = `Usage: godeb <command> [<options> ...]
@@ -160,7 +161,7 @@ func actionCommand(version string, install bool) error {
 	fmt.Println("package", debName, "ready")
 
 	if install {
-		args := []string{"dpkg", "-i", debName}
+		args := []string{"dpkg", "-i", "--force-overwrite", debName}
 		if os.Getuid() != 0 {
 			args = append([]string{"sudo"}, args...)
 		}
