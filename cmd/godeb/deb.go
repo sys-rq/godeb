@@ -8,13 +8,14 @@ import (
 	"compress/gzip"
 	"crypto/md5"
 	"fmt"
-	"github.com/blakesmith/ar"
 	"go/build"
 	"io"
 	"os"
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/blakesmith/ar"
 )
 
 func createDeb(version string, tarball io.Reader, deb io.Writer) error {
@@ -45,12 +46,12 @@ func createDeb(version string, tarball io.Reader, deb io.Writer) error {
 }
 
 const control = `
-Package: go
+Package: golang
 Version: %s
 Architecture: %s
 Maintainer: Gustavo Niemeyer <niemeyer@canonical.com>
 Installed-Size: %d
-Conflicts: golang, golang-stable, golang-tip, golang-weekly
+Conflicts: golang-stable, golang-tip, golang-weekly
 Section: devel
 Priority: extra
 Homepage: http://golang.org
@@ -88,7 +89,7 @@ func debVersion(version string) string {
 	return version + "-godeb1"
 }
 
-var errNotInstalled = fmt.Errorf("package go is not installed")
+var errNotInstalled = fmt.Errorf("package golang is not installed")
 
 func installedDebVersion() (string, error) {
 	if _, err := exec.LookPath("dpkg-query"); err != nil {
@@ -103,7 +104,7 @@ func installedDebVersion() (string, error) {
 	env = setEnv(env, "LC_ALL", "C")
 	env = setEnv(env, "LANG", "C")
 	env = setEnv(env, "LANGUAGE", "C")
-	cmd := exec.Command("dpkg-query", "-f", "${db:Status-Abbrev}${source:Version}", "-W", "go")
+	cmd := exec.Command("dpkg-query", "-f", "${db:Status-Abbrev}${source:Version}", "-W", "golang")
 	cmd.Env = env
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -115,7 +116,7 @@ func installedDebVersion() (string, error) {
 		if len(out) > 0 {
 			msg += ": " + out
 		}
-		return "", fmt.Errorf("while querying for installed go package version: %s", msg)
+		return "", fmt.Errorf("while querying for installed golang package version: %s", msg)
 	}
 	s := string(output)
 	if !strings.HasPrefix(s, "ii ") {

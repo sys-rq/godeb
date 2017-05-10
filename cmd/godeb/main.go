@@ -88,7 +88,7 @@ func listCommand() error {
 }
 
 func removeCommand() error {
-	args := []string{"dpkg", "--purge", "go"}
+	args := []string{"dpkg", "--purge", "golang"}
 	if os.Getuid() != 0 {
 		args = append([]string{"sudo"}, args...)
 	}
@@ -96,7 +96,7 @@ func removeCommand() error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("while removing go package: %v", err)
+		return fmt.Errorf("while removing golang package: %v", err)
 	}
 	return nil
 }
@@ -132,7 +132,7 @@ func actionCommand(version string, install bool) error {
 	} else if err != nil {
 		return err
 	} else if install && debVersion(version) == installed {
-		return fmt.Errorf("go version %s is already installed", version)
+		return fmt.Errorf("golang version %s is already installed", version)
 	}
 
 	fmt.Println("processing", url)
@@ -145,7 +145,7 @@ func actionCommand(version string, install bool) error {
 	}
 	defer resp.Body.Close()
 
-	debName := fmt.Sprintf("go_%s_%s.deb", debVersion(version), debArch())
+	debName := fmt.Sprintf("golang_%s_%s.deb", debVersion(version), debArch())
 	deb, err := os.Create(debName + ".inprogress")
 	if err != nil {
 		return fmt.Errorf("cannot create deb: %v", err)
@@ -169,7 +169,7 @@ func actionCommand(version string, install bool) error {
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		if err := cmd.Run(); err != nil {
-			return fmt.Errorf("while installing go package: %v", err)
+			return fmt.Errorf("while installing golang package: %v", err)
 		}
 	}
 	return nil
